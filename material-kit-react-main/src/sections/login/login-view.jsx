@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,9 +14,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
+import { login } from 'src/features/auth/authSlice';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -24,24 +24,29 @@ import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
   const theme = useTheme();
-
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleLogin = (e) => {
+    e.preventDefault();
+    dispatch(login({ email, password }));
   };
+
+
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
-
+        <TextField name="email" label="Email address"  onChange={(e) => setUsername(e.target.value)}/>
+        {error && <p>{error}</p>}
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -66,7 +71,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleLogin}
+        disabled={loading}
       >
         Login
       </LoadingButton>

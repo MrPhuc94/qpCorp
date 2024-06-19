@@ -1,6 +1,6 @@
 // src/features/auth/authSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
   user: null,
@@ -8,10 +8,14 @@ const initialState = {
   error: null,
 };
 
+const Base_Url = import.meta.env.VITE_BASE_URL;
+
+console.log('import.meta.env.VITE_SOME_KEY', import.meta.env.VITE_BASE_URL)
+
 // Async thunk for login
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
-    const response = await axios.post('/api/login', credentials);
+    const response = await axios.post(`${Base_Url}/api/login`, credentials);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data);
@@ -19,7 +23,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI
 });
 
 // Async thunk for register
-export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
+export const register = createAsyncThunk(`${Base_Url}/auth/register`, async (credentials, thunkAPI) => {
   try {
     const response = await axios.post('/api/register', credentials);
     return response.data;
