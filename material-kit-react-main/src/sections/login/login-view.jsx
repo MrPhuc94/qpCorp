@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
+import { Alert } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -35,13 +36,10 @@ export default function LoginView() {
     dispatch(login({ email, password }));
   };
 
-
-
   const renderForm = (
     <>
       <Stack spacing={3}>
         <TextField name="email" label="Email address"  onChange={(e) => setUsername(e.target.value)}/>
-        {error && <p>{error}</p>}
         <TextField
           name="password"
           label="Password"
@@ -76,6 +74,10 @@ export default function LoginView() {
       >
         Login
       </LoadingButton>
+
+      {error && <Stack sx={{ my: 3 }}>
+        <Alert severity="error">{error?.error}</Alert>
+      </Stack>}
     </>
   );
 

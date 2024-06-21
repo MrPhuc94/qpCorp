@@ -1,3 +1,0 @@
-# qpCorp
-# qpCorp
-# qpCorp

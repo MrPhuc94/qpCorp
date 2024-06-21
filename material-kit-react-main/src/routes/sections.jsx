@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Outlet, Navigate, useRoutes  } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
@@ -13,6 +14,8 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const {token} = useSelector((state) => state.auth);
+  const isAuthenticated = token || !!localStorage.getItem('token');
   const routes = useRoutes([
     {
       element: (
@@ -22,16 +25,20 @@ export default function Router() {
           </Suspense>
         </DashboardLayout>
       ),
-      children: [
+      children: isAuthenticated && [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-      ],
+      ]
+    },
+    {
+      path: '/',
+      element: <LoginPage />,
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element:  isAuthenticated && <LoginPage />
     },
     {
       path: '404',
